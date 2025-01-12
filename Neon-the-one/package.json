@@ -1,0 +1,22 @@
+{
+  "name": "neon-the-one",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "axios": "^1.5.1",
+    "jwt-decode": "^4.0.0",
+    "vue": "^3.3.4",
+    "vue-router": "^4.2.5"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.4.0",
+    "@vue/cli-service": "^5.0.8",
+    "vite": "^4.5.0"
+  }
+}
