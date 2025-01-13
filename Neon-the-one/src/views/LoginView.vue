@@ -4,55 +4,55 @@ import axios from "axios";
 
 export default {
   name: "LoginView",
-  components: {InputComponent},
+  components: { InputComponent },
   data() {
     return {
       user: {
         name: "",
         password: "",
+        city: "", // Ajout du champ "ville"
       },
-
     };
   },
   methods: {
     login() {
-      axios.post('http://localhost:8000/api/login', this.user)
-      .then(response => {
-        console.log(response.data)
-        /*error 404*/
-        if(response.status == 404){
-          alert("User not found")
-        }
-        else{
-          /*error 401*/
-          if(response.status == 401){
-            alert("Wrong password")
+      axios
+        .post("http://localhost:8000/api/login", this.user)
+        .then((response) => {
+          if (response.status === 200) {
+            // Stockage du token et redirection
+            localStorage.setItem("token", response.data.token);
+            console.log("Token:", response.data.token);
+            this.$router.push({ name: "home" }); // Mise à jour pour rediriger vers une route appropriée
           }
-          else{
-            if(response.status == 200){
-              localStorage.setItem('token', response.data.token)
-              console.log(response.data.token)
-              this.$router.push({name: 'shop'})
+        })
+        .catch((error) => {
+          // Gestion des erreurs
+          if (error.response) {
+            if (error.response.status === 404) {
+              alert("User not found");
+            } else if (error.response.status === 401) {
+              alert("Wrong password");
+            } else {
+              console.error("Unexpected error:", error.response.data);
             }
+          } else {
+            console.error("Error:", error.message);
           }
-
-        }
-      }).catch(error => {
-        console.log(error)
-      })
-    }
-  }
-}
-
+        });
+    },
+  },
+};
 </script>
 
 <template>
   <div class="login">
     <h1>Login</h1>
-    <form action="#">
+    <form @submit.prevent="login">
       <InputComponent name="Username" v-model="user.name" />
       <InputComponent name="Password" type="password" v-model="user.password" />
-      <button @click="login">Login</button>
+      <InputComponent name="City" v-model="user.city" /> <!-- Nouveau champ -->
+      <button type="submit">Login</button>
     </form>
   </div>
 </template>
@@ -61,7 +61,7 @@ export default {
 .login {
   padding: 0% 5%;
 }
-form{
+form {
   width: 30%;
   position: absolute;
   top: 60%;
@@ -71,12 +71,12 @@ form{
   padding: 5% 2%;
   border-radius: 15px;
 }
-h1{
+h1 {
   color: white;
   text-align: center;
   font-size: 56px;
 }
-button{
+button {
   width: 100%;
   padding: 10px;
   border-radius: 5px;

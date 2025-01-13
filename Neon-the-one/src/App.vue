@@ -6,7 +6,9 @@ import HeaderBar from "./components/HeaderBar.vue";
 </script>
 
 <template>
-  <HeaderBar :user="user" class="bar"  :cart="this.cart" @buy="this.cart= []; this.cart={}" @add-to-cart="addToCart($event)"/>
+  <div>
+    <HeaderBar :user="{ id: 1, name: 'Admin User', admin: true }" />
+  </div>
 
   <RouterView @AddToCart="purchase" :user="user"/>
 </template>

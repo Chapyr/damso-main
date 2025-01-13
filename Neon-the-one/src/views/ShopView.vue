@@ -1,162 +1,134 @@
+<script>
+import axios from "axios";
+
+export default {
+  name: "MoviesCatalog",
+  data() {
+    return {
+      movies: [
+        {
+          id: 1,
+          title: "Inception",
+          description: "A mind-bending thriller where dreams are the battlefield.",
+          rating: 4.5,
+        },
+        {
+          id: 2,
+          title: "The Dark Knight",
+          description: "Batman faces the Joker in this gripping action movie.",
+          rating: 5,
+        },
+        {
+          id: 3,
+          title: "Interstellar",
+          description: "A journey beyond the stars to save humanity.",
+          rating: 4.8,
+        },
+        {
+          id: 4,
+          title: "Titanic",
+          description: "A tragic love story set against the sinking of the Titanic.",
+          rating: 4.2,
+        },
+        {
+          id: 5,
+          title: "The Matrix",
+          description: "A hacker discovers the shocking reality of his world.",
+          rating: 4.7,
+        },
+      ], // Films par défaut
+    };
+  },
+  mounted() {
+    // Récupération des films depuis le backend
+    this.fetchMovies();
+  },
+  methods: {
+    fetchMovies() {
+      axios
+        .get("http://localhost:8000/api/movies") // Adaptez l'URL selon votre API
+        .then((response) => {
+          if (response.data.length > 0) {
+            this.movies = response.data;
+          }
+        })
+        .catch((error) => {
+          console.error("Erreur lors de la récupération des films :", error);
+        });
+    },
+  },
+};
+</script>
+
 <template>
-  <div class="shop">
-    <h1>Welcome to our Catalogue</h1>
-    <div class="shopgrid">
-      <div
-        class="article"
-        v-for="(article) in articles"
-        :key="article.index"
-        :style="{
-          boxShadow:
-            '0 0 7px ' +
-            article.color +
-            ', 0 0 10px ' +
-            article.color +
-            ', 0 0 20px ' +
-            article.color,
-        }"
-      >
-        <img :src="article.img" alt="" class="panier" />
-        <div class="infos">
-          <div class="tittle">
-            <h3>{{ article.name }}</h3>
-            <p :style="{ color: article.color }">{{ article.price }}€</p>
-          </div>
-          <p>{{ article.description }}</p>
-          <button
-            @click="$emit('add-to-cart', article._id, 1 )"
-            :style="{
-              boxShadow:
-                '0 0 7px ' +
-                article.color +
-                ', 0 0 10px ' +
-                article.color +
-                ', 0 0 20px ' +
-                article.color,
-                borderColor: article.color,
-                Hover: {
-                  color: article.color,
-                },
-            }"
-          >
-            Add to cart
-          </button>
+  <div class="catalog">
+    <h1>Movies Catalog</h1>
+    <div class="movies-list">
+      <div v-for="movie in movies" :key="movie.id" class="movie-card">
+        <h2>{{ movie.title }}</h2>
+        <p>{{ movie.description }}</p>
+        <div class="rating">
+          <span v-for="n in 5" :key="n" class="star" :class="{ filled: n <= movie.rating }">
+            ★
+          </span>
+          <p>({{ movie.rating }}/5)</p>
         </div>
       </div>
     </div>
   </div>
 </template>
 
-<script >
-import axios from "axios";
-
-
-export default {
-  name: "ShopView",
-  data() {
-    return {
-      /*define an array of articles*/
-      articles: [],
-    };
-  },
-  mounted(){
-    axios.get('http://localhost:4000/api/prods')
-    .then(response => {
-        this.articles = response.data
-    })
-    .catch(error => {
-      console.log(error)
-    })
-  }
-};
-</script>
-
 <style scoped>
+.catalog {
+  padding: 2% 5%;
+  text-align: center;
+}
+
 h1 {
-  color: white;
+  color: #ff6088;
+  font-size: 56px;
+  margin-bottom: 30px;
 }
-.shop {
-  padding: 0% 5%;
 
-}
-.shopgrid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-gap: 25px;
-}
-img {
-  width: 100%;
-  height: 60%;
-  object-fit: cover;
-  border-radius: 20px 20px 0 0;
-  margin-bottom: 0px;
-  padding-bottom: 0px;
-}
-.article {
-  background-color: rgba(0, 0, 0, 0.35);
-  margin: 5%;
-  border-radius: 20px;
-  box-shadow: 
-    /* White glow */ 0 0 7px #ff6088, 0 0 10px #ff6088,
-    0 0 20px #ff6088;
-  height: 100%;
-}
-.article:hover {
-  transform: scale(1.005);
-  z-index: 0;
-  transition: all 0.1s ease-in-out;
-}
-.infos {
-  margin-top: -5px;
-
-  height: 40%;
-  border-radius: 0 0 20px 20px;
-  padding: 15px;
-}
-h3 {
-  margin-top: 0px;
-  color: white;
-  font-size: 30px;
-  margin-bottom: 0px;
-
-  letter-spacing: 2px;
-}
-.tittle {
+.movies-list {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  /*align the items in the center
-  */
-  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
 }
-.tittle p {
-  margin-top: 0px;
 
-  font-size: 30px;
-  margin-bottom: 0px;
-}
-p {
+.movie-card {
+  background-color: #222;
   color: white;
-}
-a {
-  text-decoration: none;
-}
-.infos button {
-  float: right;
-  background: none;
   border-radius: 10px;
-  font-size: 30px;
-  padding: 5px 15px;
-  border: 2px solid #ff6088;
-  box-shadow: 
-    /* White glow */ 0 0 2px #ff6088, 0 0 20px #ff6088;
-  margin-bottom: 20px;
-  color: white;
-
-
+  padding: 20px;
+  width: 300px;
+  text-align: left;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
-button:hover {
-  background-color: rgba(255, 255, 255, 0.2);
-  cursor: pointer;
+
+.movie-card h2 {
+  margin: 0 0 10px;
+  font-size: 24px;
+}
+
+.movie-card p {
+  font-size: 16px;
+  margin: 10px 0;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.star {
+  font-size: 20px;
+  color: #ccc;
+}
+
+.star.filled {
+  color: #ff6088;
 }
 </style>

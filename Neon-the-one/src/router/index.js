@@ -29,11 +29,17 @@ const router = createRouter({
         meta : { requiresAuth : false }
     },
     {
-      path: '/orders',
-        name: 'orders',
-        component: () => import('../views/OrderView.vue'),
-      meta : { requiresAuth : true }
+      path: "/add-cinema",
+      name: "AddCinema",
+      component: () => import("@/views/AddCinemaView.vue"),
     },
+    {
+      path: "/add-movie",
+      name: "AddMovie",
+      component: () => import("@/views/AddMovieView.vue"),
+    },
+    
+    
       {
         path: '/about',
             name: 'about',
