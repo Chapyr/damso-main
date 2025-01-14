@@ -1,0 +1,89 @@
+{
+    "users": [
+      {
+        "id": 1,
+        "name": "John Doe",
+        "password": "hashed_password",
+        "city": "New York"
+      },
+      {
+        "id": 2,
+        "name": "Jane Smith",
+        "password": "hashed_password",
+        "city": "Los Angeles"
+      },
+      {
+        "id": 3,
+        "name": "Alice Johnson",
+        "password": "hashed_password",
+        "city": "Chicago"
+      }
+    ],
+    "cinemas": [
+      {
+        "id": 1,
+        "name": "Cinema Galaxy",
+        "address": "123 Galaxy Street",
+        "capacity": 200
+      },
+      {
+        "id": 2,
+        "name": "Film Paradise",
+        "address": "456 Paradise Avenue",
+        "capacity": 150
+      },
+      {
+        "id": 3,
+        "name": "Movie Magic",
+        "address": "789 Magic Boulevard",
+        "capacity": 300
+      }
+    ],
+    "movies": [
+      {
+        "id": 1,
+        "title": "Inception",
+        "synopsis": "A mind-bending thriller where dreams are the battlefield.",
+        "duration": 148,
+        "cinemaId": 1,
+        "rating": 4.5
+      },
+      {
+        "id": 2,
+        "title": "The Dark Knight",
+        "synopsis": "Batman faces the Joker in this gripping action movie.",
+        "duration": 152,
+        "cinemaId": 2,
+        "rating": 5
+      },
+      {
+        "id": 3,
+        "title": "Interstellar",
+        "synopsis": "A journey beyond the stars to save humanity.",
+        "duration": 169,
+        "cinemaId": 3,
+        "rating": 4.8
+      }
+    ],
+    "ratings": [
+      {
+        "id": 1,
+        "userId": 1,
+        "movieId": 1,
+        "score": 5
+      },
+      {
+        "id": 2,
+        "userId": 2,
+        "movieId": 2,
+        "score": 4.5
+      },
+      {
+        "id": 3,
+        "userId": 3,
+        "movieId": 3,
+        "score": 4.8
+      }
+    ]
+  }
+  
