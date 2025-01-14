@@ -7,6 +7,8 @@ export default {
     return {
       movies: [], // Liste des films
       cinemas: [], // Liste des cinémas associés
+      selectedLocation: "", // Localisation sélectionnée
+      availableLocations: [], // Liste des localisations disponibles
     };
   },
   mounted() {
@@ -32,6 +34,11 @@ export default {
         .get("http://localhost:8000/api/cinemas") // Adaptez l'URL selon votre API
         .then((response) => {
           this.cinemas = response.data;
+
+          // Extraire les localisations disponibles des cinémas
+          this.availableLocations = [
+            ...new Set(this.cinemas.map((cinema) => cinema.address)),
+          ];
         })
         .catch((error) => {
           console.error("Erreur lors de la récupération des cinémas :", error);
@@ -41,6 +48,19 @@ export default {
       const cinema = this.cinemas.find((cinema) => cinema.id === cinemaId);
       return cinema ? cinema.name : "Unknown Cinema";
     },
+    getCinemaLocation(cinemaId) {
+      const cinema = this.cinemas.find((cinema) => cinema.id === cinemaId);
+      return cinema ? cinema.address : "Unknown Location";
+    },
+    filteredMovies() {
+      if (!this.selectedLocation) {
+        return this.movies;
+      }
+      return this.movies.filter((movie) => {
+        const cinema = this.cinemas.find((cinema) => cinema.id === movie.cinemaId);
+        return cinema && cinema.address === this.selectedLocation;
+      });
+    },
   },
 };
 </script>
@@ -48,12 +68,26 @@ export default {
 <template>
   <div class="catalog">
     <h1>Movies Catalog</h1>
+
+    <!-- Filtre par localisation -->
+    <div class="filter">
+      <label for="location">Filter by Location:</label>
+      <select v-model="selectedLocation" id="location">
+        <option value="">All Locations</option>
+        <option v-for="location in availableLocations" :key="location" :value="location">
+          {{ location }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Liste des films -->
     <div class="movies-list">
-      <div v-for="movie in movies" :key="movie.id" class="movie-card">
+      <div v-for="movie in filteredMovies()" :key="movie.id" class="movie-card">
         <h2>{{ movie.title }}</h2>
         <p><strong>Synopsis:</strong> {{ movie.synopsis }}</p>
         <p><strong>Duration:</strong> {{ movie.duration }} minutes</p>
         <p><strong>Cinema:</strong> {{ getCinemaName(movie.cinemaId) }}</p>
+        <p><strong>Location:</strong> {{ getCinemaLocation(movie.cinemaId) }}</p>
         <div class="rating">
           <span v-for="n in 5" :key="n" class="star" :class="{ filled: n <= movie.rating }">
             ★
@@ -75,6 +109,25 @@ h1 {
   color: #ff6088;
   font-size: 56px;
   margin-bottom: 30px;
+}
+
+.filter {
+  margin-bottom: 20px;
+}
+
+.filter label {
+  font-size: 16px;
+  margin-right: 10px;
+  color: white;
+}
+
+.filter select {
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: none;
+  background-color: #1f1f1f;
+  color: #ff6088;
+  font-size: 14px;
 }
 
 .movies-list {
