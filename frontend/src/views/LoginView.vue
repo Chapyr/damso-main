@@ -1,6 +1,6 @@
 <script>
-import InputComponent from "@/components/InputComponent.vue";
 import axios from "axios";
+import InputComponent from "@/components/InputComponent.vue"; // Assurez-vous que ce chemin est correct
 
 export default {
   name: "LoginView",
@@ -10,20 +10,27 @@ export default {
       user: {
         name: "",
         password: "",
-        city: "", // Ajout du champ "ville"
       },
     };
   },
   methods: {
     login() {
+      // Validation des champs
+      if (!this.user.name || !this.user.password) {
+        alert("All fields are required.");
+        return;
+      }
+
+      // Requête d'authentification
       axios
         .post("http://localhost:8000/api/login", this.user)
         .then((response) => {
           if (response.status === 200) {
-            // Stockage du token et redirection
+            // Stocker le token dans localStorage
             localStorage.setItem("token", response.data.token);
-            console.log("Token:", response.data.token);
-            this.$router.push({ name: "home" }); // Mise à jour pour rediriger vers une route appropriée
+
+            // Recharger la page
+            window.location.reload();
           }
         })
         .catch((error) => {
@@ -34,9 +41,11 @@ export default {
             } else if (error.response.status === 401) {
               alert("Wrong password");
             } else {
+              alert("An unexpected error occurred. Please try again.");
               console.error("Unexpected error:", error.response.data);
             }
           } else {
+            alert("Could not connect to the server. Please check your connection.");
             console.error("Error:", error.message);
           }
         });
@@ -51,7 +60,6 @@ export default {
     <form @submit.prevent="login">
       <InputComponent name="Username" v-model="user.name" />
       <InputComponent name="Password" type="password" v-model="user.password" />
-      <InputComponent name="City" v-model="user.city" /> <!-- Nouveau champ -->
       <button type="submit">Login</button>
     </form>
   </div>
@@ -87,5 +95,10 @@ button {
   background-color: #1f1f1f;
   color: #ff6088;
   font-size: 20px;
+}
+button:hover {
+  background-color: #ff6088;
+  color: white;
+  transition: all 0.1s ease-in-out;
 }
 </style>
