@@ -9,7 +9,7 @@ export default {
     return {
       cinema: {
         name: "",
-        address: "",
+        city: "", // Champ ville (remplace adresse)
         capacity: null,
       },
       successMessage: "",
@@ -18,6 +18,12 @@ export default {
   },
   methods: {
     addCinema() {
+      // Validation simple
+      if (!this.cinema.name || !this.cinema.city || !this.cinema.capacity) {
+        this.errorMessage = "All fields are required.";
+        return;
+      }
+
       axios
         .post("http://localhost:8000/api/cinemas", this.cinema)
         .then((response) => {
@@ -34,9 +40,11 @@ export default {
     resetForm() {
       this.cinema = {
         name: "",
-        address: "",
+        city: "",
         capacity: null,
       };
+      this.successMessage = "";
+      this.errorMessage = "";
     },
   },
 };
@@ -47,7 +55,7 @@ export default {
     <h1>Add a Cinema</h1>
     <form @submit.prevent="addCinema">
       <InputComponent name="Cinema Name" v-model="cinema.name" />
-      <InputComponent name="Address" v-model="cinema.address" />
+      <InputComponent name="City" v-model="cinema.city" />
       <InputComponent name="Capacity" type="number" v-model="cinema.capacity" />
       <button type="submit">Add Cinema</button>
     </form>

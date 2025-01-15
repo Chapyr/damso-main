@@ -16,12 +16,19 @@ export default {
   },
   methods: {
     register() {
+      // Validation simple des champs
+      if (!this.user.name || !this.user.password || !this.user.city) {
+        alert("All fields are required.");
+        return;
+      }
+
+      // Envoi des données utilisateur au backend
       axios
-        .post("http://localhost:8000/api/register", this.user)
+        .post("http://localhost:8000/api/users", this.user)
         .then((response) => {
           if (response.status === 201) {
             alert("User created successfully!");
-            this.$router.push({ name: "login" });
+            this.$router.push({ name: "login" }); // Redirection vers la page de connexion
           }
         })
         .catch((error) => {

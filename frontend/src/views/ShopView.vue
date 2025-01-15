@@ -7,8 +7,8 @@ export default {
     return {
       movies: [], // Liste des films
       cinemas: [], // Liste des cinémas associés
-      selectedLocation: "", // Localisation sélectionnée
-      availableLocations: [], // Liste des localisations disponibles
+      selectedCity: "", // Ville sélectionnée
+      availableCities: [], // Liste des villes disponibles
     };
   },
   mounted() {
@@ -35,9 +35,9 @@ export default {
         .then((response) => {
           this.cinemas = response.data;
 
-          // Extraire les localisations disponibles des cinémas
-          this.availableLocations = [
-            ...new Set(this.cinemas.map((cinema) => cinema.address)),
+          // Extraire les villes disponibles des cinémas
+          this.availableCities = [
+            ...new Set(this.cinemas.map((cinema) => cinema.city)),
           ];
         })
         .catch((error) => {
@@ -48,17 +48,17 @@ export default {
       const cinema = this.cinemas.find((cinema) => cinema.id === cinemaId);
       return cinema ? cinema.name : "Unknown Cinema";
     },
-    getCinemaLocation(cinemaId) {
+    getCinemaCity(cinemaId) {
       const cinema = this.cinemas.find((cinema) => cinema.id === cinemaId);
-      return cinema ? cinema.address : "Unknown Location";
+      return cinema ? cinema.city : "Unknown City";
     },
     filteredMovies() {
-      if (!this.selectedLocation) {
+      if (!this.selectedCity) {
         return this.movies;
       }
       return this.movies.filter((movie) => {
         const cinema = this.cinemas.find((cinema) => cinema.id === movie.cinemaId);
-        return cinema && cinema.address === this.selectedLocation;
+        return cinema && cinema.city === this.selectedCity;
       });
     },
   },
@@ -69,13 +69,13 @@ export default {
   <div class="catalog">
     <h1>Movies Catalog</h1>
 
-    <!-- Filtre par localisation -->
+    <!-- Filtre par ville -->
     <div class="filter">
-      <label for="location">Filter by Location:</label>
-      <select v-model="selectedLocation" id="location">
-        <option value="">All Locations</option>
-        <option v-for="location in availableLocations" :key="location" :value="location">
-          {{ location }}
+      <label for="city">Filter by City:</label>
+      <select v-model="selectedCity" id="city">
+        <option value="">All Cities</option>
+        <option v-for="city in availableCities" :key="city" :value="city">
+          {{ city }}
         </option>
       </select>
     </div>
@@ -87,7 +87,7 @@ export default {
         <p><strong>Synopsis:</strong> {{ movie.synopsis }}</p>
         <p><strong>Duration:</strong> {{ movie.duration }} minutes</p>
         <p><strong>Cinema:</strong> {{ getCinemaName(movie.cinemaId) }}</p>
-        <p><strong>Location:</strong> {{ getCinemaLocation(movie.cinemaId) }}</p>
+        <p><strong>City:</strong> {{ getCinemaCity(movie.cinemaId) }}</p>
         <div class="rating">
           <span v-for="n in 5" :key="n" class="star" :class="{ filled: n <= movie.rating }">
             ★
